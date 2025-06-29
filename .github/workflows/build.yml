@@ -95,7 +95,7 @@ jobs:
 
       - name: Compress native directory (Android)
         if: contains(matrix.platform.name, 'android')
-        run: tar -cf native-${{ matrix.platform.name }}.tar native/android/${{ matrix.platform.abi }}
+        run: tar -cvf native-${{ matrix.platform.name }}.tar native/android/${{ matrix.platform.abi }}
 
       - name: Upload native artifact
         uses: actions/upload-artifact@v4
@@ -129,7 +129,7 @@ jobs:
           cp External/SDL/Xcode/SDL/build/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/Info.plist native/ios/SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework/Info.plist;
 
       - name: Compress native directory
-        run: tar -cf native-ios.tar native/ios
+        run: tar -cvf native-ios.tar native/ios
 
       - name: Upload native artifact
         uses: actions/upload-artifact@v4
