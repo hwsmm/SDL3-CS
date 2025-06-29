@@ -159,7 +159,7 @@ run_cmake() {
     cmake --build build/ --config $BUILD_TYPE --verbose
     cmake --install build/ --prefix $CMAKE_INSTALL_PREFIX --config $BUILD_TYPE
 
-    # Move build lib into correct foldersAdd commentMore actions
+    # Move build lib into correct folders
     cp $CMAKE_INSTALL_PREFIX/$LIB_OUTPUT ../../native/$NATIVE_PATH
 
     popd
