@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Text;
 using static SDL.SDL3_image;
 using static SDL.SDL3_ttf;
+using static SDL.SDL3_mixer;
 using static SDL.SDL3;
 
 namespace SDL.Tests
@@ -27,8 +28,8 @@ namespace SDL.Tests
 
             using (var window = new MyWindow())
             {
-                // Check if IMG and TTF libraries exist.
-                Console.WriteLine($"SDL revision: {SDL_GetRevision()}, IMG {IMG_Version()}, TTF {TTF_Version()}");
+                // Check if satellite libraries exist.
+                Console.WriteLine($"SDL revision: {SDL_GetRevision()}, IMG {IMG_Version()}, TTF {TTF_Version()}, Mixer {Mix_Version()}");
 
                 printDisplays();
 

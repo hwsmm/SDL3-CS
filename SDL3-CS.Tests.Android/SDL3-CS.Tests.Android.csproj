@@ -57,6 +57,18 @@
     <AndroidNativeLibrary Include="$(MSBuildThisFileDirectory)..\native\android\x86_64\libSDL3_ttf.so">
       <Abi>x86_64</Abi>
     </AndroidNativeLibrary>
+    <AndroidNativeLibrary Include="$(MSBuildThisFileDirectory)..\native\android\armeabi-v7a\libSDL3_mixer.so">
+      <Abi>armeabi-v7a</Abi>
+    </AndroidNativeLibrary>
+    <AndroidNativeLibrary Include="$(MSBuildThisFileDirectory)..\native\android\arm64-v8a\libSDL3_mixer.so">
+      <Abi>arm64-v8a</Abi>
+    </AndroidNativeLibrary>
+    <AndroidNativeLibrary Include="$(MSBuildThisFileDirectory)..\native\android\x86\libSDL3_mixer.so">
+      <Abi>x86</Abi>
+    </AndroidNativeLibrary>
+    <AndroidNativeLibrary Include="$(MSBuildThisFileDirectory)..\native\android\x86_64\libSDL3_mixer.so">
+      <Abi>x86_64</Abi>
+    </AndroidNativeLibrary>
   </ItemGroup>
 
 </Project>
