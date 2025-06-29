@@ -145,7 +145,7 @@ run_cmake() {
 
     rm -rf build
     cmake -B build $FLAGS -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DSDL_SHARED=ON -DSDL_STATIC=OFF "${@:2}"
-    cmake --build build/ --config $BUILD_TYPE
+    cmake --build build/ --config $BUILD_TYPE --verbose
     cmake --install build/ --prefix $CMAKE_INSTALL_PREFIX --config $BUILD_TYPE
 
     popd
