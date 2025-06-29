@@ -109,6 +109,7 @@ if [[ $RUNNER_OS == 'Linux' ]]; then
     git config --global --add safe.directory $PWD/SDL
     git config --global --add safe.directory $PWD/SDL_image
     git config --global --add safe.directory $PWD/SDL_ttf
+    git config --global --add safe.directory $PWD/SDL_mixer
 fi
 
 if [[ $BUILD_PLATFORM == 'Android' ]]; then
@@ -163,5 +164,7 @@ run_cmake SDL_ttf ${OUTPUT_LIB/variant/_ttf} -DCMAKE_PREFIX_PATH=$CMAKE_PREFIX_P
 # -DSDLIMAGE_AVIF=OFF is used because windows requires special setup to build avif support (nasm)
 # TODO: Add support for avif on windows (VisualC script uses dynamic imports)
 run_cmake SDL_image ${OUTPUT_LIB/variant/_image} -DCMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH -DSDLIMAGE_AVIF=OFF -DSDLIMAGE_DEPS_SHARED=OFF -DSDLIMAGE_VENDORED=ON
+
+run_cmake SDL_mixer ${OUTPUT_LIB/variant/_mixer} -DCMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH -DSDLMIXER_VENDORED=ON
 
 popd
