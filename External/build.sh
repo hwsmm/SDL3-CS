@@ -120,6 +120,16 @@ fi
 CMAKE_INSTALL_PREFIX="$PWD/install_output"
 rm -rf $CMAKE_INSTALL_PREFIX
 
+if [[ $BUILD_PLATFORM == 'Android' ]]; then
+    OUTPUT_LIB="lib/libSDL3variant.so"
+elif [[ $BUILD_PLATFORM == 'Windows' ]]; then
+    OUTPUT_LIB="bin/SDL3variant.dll"
+elif [[ $BUILD_PLATFORM == 'Linux' ]]; then
+    OUTPUT_LIB="lib/libSDL3variant.so"
+elif [[ $BUILD_PLATFORM == 'macOS' ]]; then
+    OUTPUT_LIB="lib/libSDL3variant.dylib"
+fi
+
 # Use the correct CMAKE_PREFIX_PATH for SDL_image and SDL_ttf, probably due differences in Cmake versions.
 if [[ $BUILD_PLATFORM == 'Android' ]]; then
     CMAKE_PREFIX_PATH="$CMAKE_INSTALL_PREFIX"
@@ -133,6 +143,7 @@ fi
 
 run_cmake() {
     LIB_NAME=$1
+    LIB_OUTPUT=$2
 
     pushd $LIB_NAME
 
@@ -144,32 +155,24 @@ run_cmake() {
     fi
 
     rm -rf build
-    cmake -B build $FLAGS -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DSDL_SHARED=ON -DSDL_STATIC=OFF "${@:2}"
+    cmake -B build $FLAGS -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DSDL_SHARED=ON -DSDL_STATIC=OFF "${@:3}"
     cmake --build build/ --config $BUILD_TYPE --verbose
     cmake --install build/ --prefix $CMAKE_INSTALL_PREFIX --config $BUILD_TYPE
+
+    # Move build lib into correct foldersAdd commentMore actions
+    cp $CMAKE_INSTALL_PREFIX/$LIB_OUTPUT ../../native/$NATIVE_PATH
 
     popd
 }
 
-run_cmake SDL
+run_cmake SDL ${OUTPUT_LIB/variant/}
 
-run_cmake SDL_ttf -DCMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DSDLTTF_VENDORED=ON
+run_cmake SDL_ttf ${OUTPUT_LIB/variant/_ttf} -DCMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DSDLTTF_VENDORED=ON
 
 # -DSDLIMAGE_AVIF=OFF is used because windows requires special setup to build avif support (nasm)
 # TODO: Add support for avif on windows (VisualC script uses dynamic imports)
-run_cmake SDL_image -DCMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH -DSDLIMAGE_AVIF=OFF -DSDLIMAGE_DEPS_SHARED=OFF -DSDLIMAGE_VENDORED=ON
+run_cmake SDL_image ${OUTPUT_LIB/variant/_image} -DCMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH -DSDLIMAGE_AVIF=OFF -DSDLIMAGE_DEPS_SHARED=OFF -DSDLIMAGE_VENDORED=ON
 
-run_cmake SDL_mixer -DCMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH -DSDLMIXER_DEPS_SHARED=OFF -DSDLMIXER_VENDORED=ON
-
-# Copy installed libraries to native directory
-if [[ $BUILD_PLATFORM == 'Android' ]]; then
-    find $CMAKE_INSTALL_PREFIX/lib -type f -name "*.so" -exec cp {} ../native/$NATIVE_PATH \;
-elif [[ $BUILD_PLATFORM == 'Windows' ]]; then
-    find $CMAKE_INSTALL_PREFIX/bin -type f -name "*.dll" -exec cp {} ../native/$NATIVE_PATH \;
-elif [[ $BUILD_PLATFORM == 'Linux' ]]; then
-    find $CMAKE_INSTALL_PREFIX/lib -type f -name "*.so" -exec cp {} ../native/$NATIVE_PATH \;
-elif [[ $BUILD_PLATFORM == 'macOS' ]]; then
-    find $CMAKE_INSTALL_PREFIX/lib -type f -name "*.dylib" -exec cp {} ../native/$NATIVE_PATH \;
-fi
+run_cmake SDL_mixer ${OUTPUT_LIB/variant/_mixer} -DCMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH -DSDLMIXER_DEPS_SHARED=OFF -DSDLMIXER_VENDORED=ON
 
 popd
