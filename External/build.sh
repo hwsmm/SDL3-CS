@@ -162,10 +162,14 @@ run_cmake SDL_image -DCMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH -DSDLIMAGE_AVIF=OFF -
 run_cmake SDL_mixer -DCMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH -DSDLMIXER_DEPS_SHARED=OFF -DSDLMIXER_VENDORED=ON
 
 # Copy installed libraries to native directory
-if [[ $BUILD_PLATFORM == 'Windows' ]]; then
-    cp -v $CMAKE_INSTALL_PREFIX/bin/* ../native/$NATIVE_PATH
-else
-    cp -v $CMAKE_INSTALL_PREFIX/lib/* ../native/$NATIVE_PATH
+if [[ $BUILD_PLATFORM == 'Android' ]]; then
+    find $CMAKE_INSTALL_PREFIX/lib -type f -name "*.so" -exec cp {} ../native/$NATIVE_PATH \;
+elif [[ $BUILD_PLATFORM == 'Windows' ]]; then
+    find $CMAKE_INSTALL_PREFIX/bin -type f -name "*.dll" -exec cp {} ../native/$NATIVE_PATH \;
+elif [[ $BUILD_PLATFORM == 'Linux' ]]; then
+    find $CMAKE_INSTALL_PREFIX/lib -type f -name "*.so" -exec cp {} ../native/$NATIVE_PATH \;
+elif [[ $BUILD_PLATFORM == 'macOS' ]]; then
+    find $CMAKE_INSTALL_PREFIX/lib -type f -name "*.dylib" -exec cp {} ../native/$NATIVE_PATH \;
 fi
 
 popd
